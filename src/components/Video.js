@@ -57,7 +57,6 @@ const Video = (props) => {
           setPlayPause(false);
         }
       }
-      
     }
     
     observer.observe(videoRef.current);
