@@ -6,11 +6,16 @@ import { useState, useRef, useEffect } from "react";
 
 const Video = (props) => {
   const [playPause, setPlayPause] = useState(true);
-  const [muted, setMuted] = useState(false);
+  // const [muted, setMuted] = useState(false);
   const [videoHover, setVideoHover] = useState(false);
   const [preVolume, setPreVolume] = useState(0);
   const videoRef = useRef(null);
-  const volumeRef = useRef(null);
+  // const volumeRef = useRef(null);
+
+  let volume = props.volume;
+
+  const backgroundSize = (volume) + "% 100% "; //dòng này liên quan đến giao diện nên luôn được thực hiện, khai báo kiểu này cũng giống như
+  // chúng ta đang gán trực tiếp giá trị (volume) + "% 100%") vào thẻ input, đều được tính lại cho mỗi lần re-render.
 
   const clickHander = () => {
     // mute = false;
@@ -60,6 +65,10 @@ const Video = (props) => {
     }
     
     observer.observe(videoRef.current);
+
+    return () => {
+      
+    }
   }, []);
 
   useEffect(() => {
@@ -70,12 +79,8 @@ const Video = (props) => {
   }, [playPause])
 
   useEffect(() => {
-    videoRef.current.volume = props.volume/100;
-    if(volumeRef.current) {
-      volumeRef.current.style.backgroundSize = (props.volume) + "% 100% ";
-    }
-    
-  }, [props.volume]);
+    videoRef.current.volume = volume/100;
+  }, [volume]); //props.volume chỉ là giá trị riêng của component instance này, không phải của các instance khác
 
   // const testClickHandler = () => {
   //   playRef.current.click();
@@ -90,21 +95,35 @@ const Video = (props) => {
   }
 
   const mutedClickHandler = () => {
-    setMuted(preState => !preState);
-    if(props.volume > 0) {
+    // setMuted(preState => !preState); //update state bằng not preState khi click rất nguy hiểm ,dễ gây sai
+    if(volume > 0) {
       props.updateVolume(0);
-      setPreVolume(props.volume);
+      setPreVolume(volume);
     } else {
       props.updateVolume(preVolume);
     }
   }
 
+  // let timeout = null;
   const volumeChangeHandler = (event) => {
-    props.updateVolume(event.target.value);
+    // let value = +event.target.value; //=> Cần phải có dòng này để lưu value lại vì input đang là controlled component, khi chạy hết 
+    //callback này giá trị value của event sẽ trở về giá trị trong prop value. Nếu chúng ta không update giá trị prop value thì giá trị
+    //ô input sẽ không thay đổi và chúng ta không thể thấy sự thay đổi của ô input.
+    // clearTimeout(timeout);
+    // timeout = setTimeout(() => { //Dùng để việc update state không xảy ra liên tục
+    //   props.updateVolume(value); // Giá trị volume là giá trị của ô input và có kiểu string
+    //   // if(event.target.value === "0") setPreVolume(50);
+    //   // setMuted(event.target.value === 0 ? true : false);
+    // }, 500); // => Đây là cách giúp không setState liên tục nhưng sẽ làm thanh volume bị khựng.
+    props.updateVolume(+event.target.value); // Giá trị volume là giá trị của ô input và có kiểu string
+    if(event.target.value === "0") setPreVolume(50);
+    // console.log(typeof volume);
+    // setMuted(event.target.value === 0 ? true : false);
   }
 
   return (
     <div onMouseOver={mouseOverHandler} onMouseLeave={onMouseLeaveHandler}>
+    {/* <input type="text" value="text" onChange={(event) => {console.log(event.target.value)}}/> */}
       {videoHover && <div className="cover">
         <span onClick={clickHander}>
           {playPause && <PlayIcon />}
@@ -112,10 +131,11 @@ const Video = (props) => {
         </span>
         <span>
           <span onClick={mutedClickHandler}>
-          {!muted && <VolumeIcon />}
-          {muted && <MuteIcon />}</span>
+            {volume.toString() !== "0" && <VolumeIcon />}
+            {volume.toString() === "0" && <MuteIcon />}
+          </span>
           <div class="volume">
-            <input type="range" min="0" max="100" step="1" value={props.volume} ref={volumeRef} onChange={volumeChangeHandler}/>
+            <input type="range" min="0" max="100" step="1" value={volume} style={{backgroundSize: backgroundSize}} onChange={volumeChangeHandler}/>
           </div>
         </span>
       </div>}

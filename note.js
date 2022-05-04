@@ -35,7 +35,14 @@
  * - conditional add attribute to React component:
  * - Không thể auto play video with sound in chrome: (có thể là để tránh các quảng cáo tự động phát với tiếng ồn).
  * https://stackoverflow.com/questions/49930680/how-to-handle-uncaught-in-promise-domexception-play-failed-because-the-use
+ * - Cách auto play video theo trạng thái scrolling (khi % video xuất hiện trên màn hình là 1 số % nào đó): sử dụng IntersectionObserver API
+ * (native in modern browser): https://stackoverflow.com/questions/487073/how-to-check-if-element-is-visible-after-scrolling
  * - <video> source update trong html nhưng video không thay đổi:
  * https://stackoverflow.com/questions/41303012/updating-source-url-on-html5-video-with-react
  * Trong trường hợp của mình là gắn key rồi nhưng bị trùng id giữa 2 list
+ * 
+ * - Styling input type="range": https://nikitahl.com/style-range-input-css, https://freefrontend.com/css-range-sliders/
+ * 
+ * - prop value của thẻ input và lỗi không thể typing trong thẻ input:
+ * https://stackoverflow.com/questions/34006333/cant-type-in-react-input-text-field
  */

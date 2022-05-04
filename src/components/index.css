@@ -441,7 +441,7 @@ p {
   -webkit-appearance: none;
   background: rgba(256, 256, 256, 0.5);
   background-image: linear-gradient(white, white);
-  background-size: 50% 100%;
+  /* background-size: 50% 100%; */
   background-repeat: no-repeat;
   height: 2px;
   width: 54px;
